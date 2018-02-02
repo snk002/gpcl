@@ -25,7 +25,7 @@ class CValues
 //document type. One of: HTML4, HTML4S, XHTML1, XHTML1S, XTHTML11, HTML5               
     public static $doctype = "XHTML1S";
 //copyright string (if autofooter enabled)                 
-    public static $copyright = "&copy; 2017 All rights reserved";
+    public static $copyright = "&copy; 2018 All rights reserved";
 ///**** Website-specific ****///
 //site name
     public static $sitename = "My Site";
