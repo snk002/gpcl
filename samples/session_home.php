@@ -9,7 +9,7 @@ Sample access to session, created with session_login.php or
 session_home.php
 */
 
-set_include_path("classes");
+set_include_path("../classes");
 include("session.php");
 
 $session = new TSession();

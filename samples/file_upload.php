@@ -8,7 +8,7 @@ file_upload.php
 File uploads example
 */
 
-set_include_path("classes");
+set_include_path("../classes");
 require_once("controls.php");
 require_once("documents.php");
 require_once("forms.php");
@@ -64,7 +64,7 @@ class TSampleUploadForm extends TForm {
             } else {
                 if ($maketumb) {
                     $pic = new TIMGH($up->fullpath());
-                    $pic->resize($tumbx,$tumby,$path.$this->path."tumb-".$up->filename);
+                    $pic->resize($tumbx,$tumby,$this->path."tumb-".$up->filename);
                 }
                 return $_FILES[$file]["name"];
             }

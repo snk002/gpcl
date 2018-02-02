@@ -8,7 +8,7 @@ session_dblogin.php
 Create session with checking username/password given from database example
 */
 
-set_include_path("classes");
+set_include_path("../classes");
 include("stdforms.php");
 include("stdcheck.php");
 include("stdsdocs.php");

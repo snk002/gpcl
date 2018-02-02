@@ -8,7 +8,7 @@ session_login.php
 Create session with simple checking plain username/password example
 */
 
-set_include_path("classes");
+set_include_path("../classes");
 include("stdforms.php");
 include("stdcheck.php");
 include("documents.php");
