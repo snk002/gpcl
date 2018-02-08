@@ -57,7 +57,7 @@ class TDBDocument extends TDocument
 
     public function connect($strong = false)
     {
-        $this->db->link(false, $strong);
+        return $this->db->link(false, $strong);
     }
 }
 

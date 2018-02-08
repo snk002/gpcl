@@ -622,7 +622,7 @@ class TDBFormData extends TFormData
             if (isset($id)) $this->idval = $id;
             $this->UpdateInDB(" where $this->idfld = " . $this->GetIdValue());
         }
-echo "SaveToDB idfld/idval: $this->idfld = {$this->GetIdValue()}<br />";
+//echo "SaveToDB idfld/idval: $this->idfld = {$this->GetIdValue()}<br />";
     }
 
     public function InsertToDB()
@@ -645,12 +645,12 @@ echo "SaveToDB idfld/idval: $this->idfld = {$this->GetIdValue()}<br />";
             $vals .= "$oq{$value}$cq";
         }
         $sql = "insert into $this->tablename ($flds) values ($vals) ";
-echo "<b>INS:</b>".$sql."<br />".intval(isset($this->db))."<br />";
+//echo "<b>INS:</b>".$sql."<br />".intval(isset($this->db))."<br />";
         if ($this->db->Query($sql)) {
-      echo "Query ok.<br />";
+//echo "Query ok.<br />";
             return $this->db->Lastval();
         } else {
-      echo "Query fail ".$this->db->GetError()."<br />";
+//echo "Query fail ".$this->db->GetError()."<br />";
             return NULL;
         }
     }

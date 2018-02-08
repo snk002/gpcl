@@ -46,7 +46,9 @@ class TDBH extends TObject
     public function link($stoponerror = true, $alwaysconnect = false)
     {
         $this->stoponerror = $stoponerror;
-        if (($this->flink == NULL) || ($alwaysconnect)) $this->connect();
+        if (($this->flink == NULL) || ($alwaysconnect)) {
+            return $this->connect();
+        }
         return $this->flink;
     }
 
@@ -85,6 +87,7 @@ class TDBH extends TObject
             }
             case 4: {
                 $link = mysqli_connect($this->host, $this->dbuser, $this->dbpass, $this->dbname);
+                if ($link === false) break;
                 if ($this->charset != "") {
                     mysqli_query($link, "set character set {$this->charset}");
                     $this->qcount++;
@@ -100,8 +103,8 @@ class TDBH extends TObject
                 }
             }
         }
-        if (!$link) {
-            if ($this->stoponerror) die(lc_errconect . $this->GetError()); else return false;
+        if ($link === false) {
+            if ($this->stoponerror) die(lc_errconect . " " . $this->GetError()); else return false;
         }
         $this->flink = $link;
         return $link;
@@ -361,7 +364,7 @@ abstract class TDBBase extends TComponent
     public function connect($db_name = "", $db_user = "", $db_pw = "", $db_host = "")
     {
         $this->db = new TDBH($db_user, $db_pw, $db_host, $db_name);
-        return $this->db->link(false);
+        return $this->db->link();
     }
 }
 

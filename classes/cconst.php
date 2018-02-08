@@ -83,19 +83,19 @@ abstract class TComponent extends TObject
 class CConst
 {
     public static $vmajor = 2;
-    public static $vminor = 2;
+    public static $vminor = 3;
     public static $vsub = " beta";
     public static $xmlns = "https://www.w3.org/1999/xhtml";
 
     public static function engine()
     {
         if (CValues::$lang == "ru") {
-            return "Сделано пр помощи <a href=\"http://www.snkey.net\">SNK GPCL для PHP</a> версии " . self::version(true);
+            return "Сделано пр помощи <a href=\"http://www.snkey.net\">GPCL для PHP</a> версии " . self::version(true);
         }
         if (CValues::$lang == "de") {
-            return "Powered by <a href=\"http://www.snkey.net\">SNK GPCL fur PHP</a> version " . self::version(true);
+            return "Powered by <a href=\"http://www.snkey.net\">GPCL fur PHP</a> version " . self::version(true);
         }
-        return "Powered by <a href=\"http://www.snkey.net\">SNK GPCL for PHP</a> version " . self::version(true);
+        return "Powered by <a href=\"http://www.snkey.net\">GPCL for PHP</a> version " . self::version(true);
     }
 
     public static function version($full = true)
