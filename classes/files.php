@@ -21,11 +21,13 @@ class TUploadH extends TControl
     public $imagetype;  //if checkimage is true, this contain type of image, e.g. image/gif
     public $silent;     //if true no error messages displayed
     public $blacklist;  //array of forbidden extentions
+    public $multi;      //multiple files support
 
-    public function __construct($name = "", $uploaddir = "")
+    public function __construct($name = "", $uploaddir = "", $multi = false)
     {
         parent::__construct(NULL);
         $this->name = $name;
+        $this->multi = $multi;
         $this->silent = true;
         $this->blacklist = array(".php", ".phtml", ".php3", ".php4", ".htm", ".html", ".xhtml", ".asp", ".jsp", ".aspx", ".exe", ".com", ".sh");
         if ($uploaddir == "") $this->uploaddir = $_SERVER['DOCUMENT_ROOT'] . "/uploads/";
@@ -38,31 +40,43 @@ class TUploadH extends TControl
         return substr(strrchr($filename, '.'), 1);
     }
 
-    public function Upload($filename = "")
+    public function Upload($filename = "", $i=0)
     {
+        if ($this->multi) {
+            $fname = $_FILES[$this->name]['name'][$i];
+            $tname = $_FILES[$this->name]['tmp_name'][$i];
+        } else {
+            $fname = $_FILES[$this->name]['name'];
+            $tname = $_FILES[$this->name]['tmp_name'];
+        }
         foreach ($this->blacklist as $item) {
-            if (preg_match("/$item\$/i", $_FILES[$this->name]['name'])) {
-                if (!$this->silent) echo $_FILES[$this->name]['name'] . " CHECK EXTENTION FAILS<br />";
+            if (preg_match("/$item\$/i", $fname)) {
+                if (!$this->silent) echo $fname . ": CHECK EXTENTION FAILS<br />";
                 return false;
             }
         }
         if ($this->checkimage) {
-            if (($_FILES[$this->name]['type'] != "image/gif") && ($_FILES[$this->name]['type'] != "image/jpeg") && ($_FILES[$this->name]['type'] != "image/png")) {
-                if (!$this->silent) echo "CHECK MIMETYPE FAILS<br />";
+            if ($this->multi) {
+                $ftype = $_FILES[$this->name]['type'][$i];
+            } else {
+                $ftype = $_FILES[$this->name]['type'];
+            }
+            if (($ftype != "image/gif") && ($ftype != "image/jpeg") && ($ftype != "image/png")) {
+                if (!$this->silent) echo $ftype . ": CHECK MIMETYPE FAILS<br />";
                 return false;
             }
-            $imageinfo = getimagesize($_FILES[$this->name]['tmp_name']);
+            $imageinfo = getimagesize($tname);
             if ($imageinfo['mime'] != 'image/gif' && $imageinfo['mime'] != 'image/jpeg' && $imageinfo['mime'] != 'image/png') {
-                if (!$this->silent) echo "CHECK IMAGESIZE FAILS<br />";
+                if (!$this->silent) echo $fname . ": CHECK IMAGESIZE FAILS<br />";
                 return false;
             }
             $this->imagetype = $imageinfo['mime'];
         }
-        if ($filename == "") $this->filename = basename($_FILES[$this->name]['name']);
+        if ($filename == "") $this->filename = basename($fname);
         else $this->filename = $filename;
         $uploadfile = $this->uploaddir . $this->filename;
         @mkdir($this->uploaddir, 0777, true);
-        return (move_uploaded_file($_FILES[$this->name]['tmp_name'], $uploadfile));
+        return (move_uploaded_file($tname, $uploadfile));
     }
 
     public function CheckOn()

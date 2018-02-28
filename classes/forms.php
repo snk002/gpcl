@@ -86,7 +86,10 @@ class TInputControl extends TFormControl
     {
         parent::SetDefAttrs();
         $this->SetAttr("type", $this->tagtype);
-        if ($this->size > 0) $this->SetAttr("size", $this->size);
+        if ($this->size > 0) {
+            if ($this->tagtype == "file") $this->SetAttr("multiple", "multiple");
+            else $this->SetAttr("size", $this->size);
+        }
         if ($this->readonly) $this->SetAttr("readonly", "readonly");
     }
 
