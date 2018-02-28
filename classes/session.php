@@ -98,6 +98,11 @@ class TSession extends TObject
         return (intval($this->GetStoredValue('admin')) == 200);
     }
 
+    public function IsActive()
+    {
+        return ($this->user > 0);
+    }
+
     public function GetStoredValue($name)
     {
         if (isset($this->storedprops[$name])) return $this->storedprops[$name];

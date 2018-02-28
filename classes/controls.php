@@ -265,12 +265,16 @@ class TTableCell extends TBlockControl
 
 class TListControl extends TOnwedControl
 {
-    public $defaultvt;   //LI/DT
-    public $basehref;  //for DL only, DD
-    protected $itemtag;      //0 = UL, 1 = OL , 2 = DL, 3 = not a HTML list, text separator is used
-    protected $itemtag2; //for 3 ((pseudo-list) type
-    protected $type;    //if true sets default by the value attribute value, not by text
-    protected $separator;     //if links used, this added as prefix (typically it should like document->prefix)
+    public $defaultvt;   //if true sets default by the value attribute value, not by text
+    public $basehref;    //if links used, this added as prefix (typically it should like document->prefix)
+    protected $itemtag;  //LI/DT
+    protected $itemtag2; //for DL only, DD //for 3 ((pseudo-list) type
+    protected $type;     //0 = UL, 1 = OL , 2 = DL, 3 = not a HTML list, text separator is used
+    protected $separator;
+    public static $UNORDERED = 0;
+    public static $ORDERED   = 1;
+    public static $DEFLIST   = 2;
+    public static $CUSTOM    = 3;
 
     public function __construct($parent, $type = 0, $sep = "")
     {
@@ -284,20 +288,20 @@ class TListControl extends TOnwedControl
         if ($type > -1) $this->type = $type;
         $this->separator = $sep;
         switch ($this->type) {
-            case 0:
+            case TListControl::$UNORDERED:
                 $this->tag = "ul";
                 $this->itemtag = "li";
                 break;
-            case 1:
+            case TListControl::$ORDERED:
                 $this->tag = "ol";
                 $this->itemtag = "li";
                 break;
-            case 2:
+            case TListControl::$DEFLIST:
                 $this->tag = "dl";
                 $this->itemtag = "dt";
                 $this->itemtag2 = "dd";
                 break;
-            case 3:
+            case TListControl::$CUSTOM:
                 $this->tag = "div";
                 $this->itemtag = "";
                 $this->itemtag2 = "";
@@ -318,17 +322,17 @@ class TListControl extends TOnwedControl
 
     public function AddItem($txt = "", $txt2 = "", $url = "")
     {
-        if ($this->type != 3) $ctrl = new TBlockControl($this, $this->itemtag);
+        if ($this->type != TListControl::$CUSTOM) $ctrl = new TBlockControl($this, $this->itemtag);
         else {
             $ctrl = new TNoControlEx($this);
             $ctrl->AddNone()->content = $this->separator;
         }
         $this->AddControl($ctrl);
-        if ($this->type != 2) $url = $txt2;
+        if ($this->type != TListControl::$DEFLIST) $url = $txt2;
         if ($txt != "")
             if ($url == "") $ctrl->content = $txt;
             else $ctrl->AddLink($this->basehref . $url, $txt);
-        if ($this->type == 2) {
+        if ($this->type == TListControl::$DEFLIST) {
             $ctrl = new TBlockControl($this, $this->itemtag2);
             $this->AddControl($ctrl);
             if ($txt2 != "") $ctrl->content = $txt2;

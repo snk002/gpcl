@@ -506,6 +506,7 @@ class TDBForm extends TForm
     public function MakeAutoData($types = NULL, $tablename = "")
     {
         $this->values = new TDBFormData($this, NULL, $types, $tablename);
+        return $this->values;
 //echo " in MakeAutoData values->idfld: ".$this->values->idfld."<br />";
     }
 
