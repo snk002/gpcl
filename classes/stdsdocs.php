@@ -19,18 +19,20 @@ class TStdDBSDocument extends TDBSDocument
     public $bodyer;
     public $footer;
 
-    function __construct($title, $closed = true)
+    function __construct($title, $closed = true, $indiv = false)
     {
         parent::__construct($title, false, $closed, $redir = "index.php", $closed);
         if ($closed) {
             if (!$this->session->GetIsAdmin()) exit;
         }
+        if ($indiv) $parent = $this->body->AddBlock("div", "body");
+        else $parent = $this->body;
         $this->header = new THeader();
-        $this->body->AddControl($this->header);
+        $parent->AddControl($this->header);
         $this->bodyer = new TBodyer();
-        $this->body->AddControl($this->bodyer);
+        $parent->AddControl($this->bodyer);
         $this->footer = new TFooter();
-        $this->body->AddControl($this->footer);
+        $parent->AddControl($this->footer);
     }
 }
 
