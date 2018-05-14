@@ -95,6 +95,27 @@ class TControl extends TComponent
     public function SetAttr($atype, $avalue, $ssymbols = false)
     {
         $this->attrs->SetAttr($atype, $avalue, $ssymbols);
+	    return $this;
+    }
+
+    public function SetStyle($avalue)
+    {
+        return $this->attrs->SetAttr("style", $avalue);
+    }
+
+    public function SetClass($avalue)
+    {
+        return $this->attrs->SetAttr("class", $avalue);
+    }
+
+    public function SetId($avalue)
+    {
+        return $this->attrs->SetAttr("id", $avalue);
+    }
+
+    public function SetOnClick($avalue)
+    {
+        return $this->attrs->SetAttr("onclick", $avalue);
     }
 
     public function HasAttr($aname, $avalue = "")
@@ -272,14 +293,16 @@ text from $endcontent placed between last child close tag and this element close
     {
         $this->controls[] = $ctrl;
         $ctrl->parentcontrol = $this;
-        if ($andreturn) return $ctrl;
+        if (!$andreturn) return null;
+        return $ctrl;
     }
 
     public function InsertControl($ctrl, $andreturn = false)
     {
         array_unshift($this->controls, $ctrl);
         $ctrl->parentcontrol = $this;
-        if ($andreturn) return $ctrl;
+        if (!$andreturn) return null;
+        return $ctrl;
     }
 
     public function AddNoneEx($text = "")
