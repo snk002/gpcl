@@ -85,6 +85,15 @@ class TBlockControl extends TOnwedControl
         return $ctrl;
     }
 
+    public function AddButton($name, $caption)
+    {
+        $ctrl = $this->AddBlock("button", "", $name);
+        if ($name!="") $ctrl->SetAttr("name", $name);
+        $ctrl->SetAttr("type", "button");
+        $ctrl->content = $caption;
+        return $ctrl;
+    }
+
     public function AddTable($cols, $rows, $autofill = true, $headrow = -1)
     {
         $ctrl = new TTableControl($this, $cols, $rows, $autofill, $headrow);
@@ -173,6 +182,8 @@ class TObjectControl extends TBlockControl
     public function __construct($parent, $url = "", $type = "")
     {
         parent::__construct($parent, "object");
+        /** @$this->params TControl[] */
+        $this->params = array();
         $this->SetAttr("data", $url);
         $this->SetAttr("type", $type);
     }
@@ -254,7 +265,7 @@ class TImgControl extends TControl
 
 class TTableCell extends TBlockControl
 {
-    public function __construct($parent, $tag = "")
+    public function __construct(TTableRow $parent, $tag = "")
     {
         if ($tag == "") {
             if ($parent->isheading) $tag = "th"; else $tag = "td";
@@ -312,7 +323,7 @@ class TListControl extends TOnwedControl
     {
         $i = 0;
         foreach ($texts as $txt) {
-            if (isset($texts[$i])) $s = $texts[$i]; else $s = "";
+            if (isset($texts[$i])) $s = $txt; else $s = "";
             if (isset($texts2[$i])) $s2 = $texts2[$i]; else $s2 = "";
             if (isset($urls[$i])) $u = $urls[$i]; else $u = "";
             $this->AddItem($s, $s2, $u);
