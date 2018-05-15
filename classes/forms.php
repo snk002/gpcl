@@ -1,6 +1,6 @@
 <?php
 /*
-GPCL for PHP (General Purpose Class Library) version 2.3
+GPCL for PHP (General Purpose Class Library) version 2.4 beta
 (c) 2008-2018 Sergei Korzhinskii - www.snkey.net
 All rights reserved.
 

@@ -1,6 +1,6 @@
 <?php
 /*
-GPCL for PHP (General Purpose Class Library) version 2.3
+GPCL for PHP (General Purpose Class Library) version 2.4 beta
 (c) 2008-2018 Sergei Korzhinskii - www.snkey.net
 All rights reserved.
 
@@ -45,6 +45,7 @@ abstract class TObject
     public function GetParentProperty($name)
     {
         if (!$this->HasParent()) return NULL;
+        /** @$this->parentcontrol TObject */
         $parent = $this->parentcontrol;
         while ((!property_exists($parent, $name)) || (!isset($parent->$name))) {
             $parent = $parent->parentcontrol;
@@ -83,7 +84,7 @@ abstract class TComponent extends TObject
 class CConst
 {
     public static $vmajor = 2;
-    public static $vminor = 3;
+    public static $vminor = 4;
     public static $vsub = " beta";
     public static $xmlns = "https://www.w3.org/1999/xhtml";
 

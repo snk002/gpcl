@@ -1,6 +1,6 @@
 <?php
 /*
-GPCL for PHP (General Purpose Class Library) version 2.3
+GPCL for PHP (General Purpose Class Library) version 2.4 beta
 (c) 2008-2018 Sergei Korzhinskii - www.snkey.net
 All rights reserved.
 
@@ -38,6 +38,7 @@ class TNewsH extends TDBBase
         $this->textlimit = 30;
         $this->limit = $num;
         $this->formatid = $format;
+        /** @$this->parent TControl */
         $this->parentdoc = $parent->ParentDocument();
         $this->newscat = 0;
         $this->dateformat = "%d.%m.%Y";

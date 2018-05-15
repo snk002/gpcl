@@ -1,6 +1,6 @@
 <?php
 /*
-GPCL for PHP (General Purpose Class Library) version 2.3
+GPCL for PHP (General Purpose Class Library) version 2.4 beta
 (c) 2008-2018 Sergei Korzhinskii - www.snkey.net
 All rights reserved.
 
@@ -165,6 +165,7 @@ class TDocumentHead extends TDocumentPart
         parent::__construct($parent);
         $this->tag = "head";
         $this->SetTitle($title);
+        /** @$this->parentcontrol TDocument */
         if ($this->parentcontrol->charset != "") $s = "; Charset={$this->parentcontrol->charset}";
         else $s="";
         $this->AddMHTTP("Content-Type", "text/html$s");
@@ -200,6 +201,7 @@ class TDocumentHead extends TDocumentPart
 
     public function AddCSS($file, $relative = true)
     {
+        /** @$this->parentcontrol TDocument */
         if ($relative) $relative = $this->parentcontrol->prefix;
         else $relative = "";
         $ctrl = $this->CreateChildControl('link');
