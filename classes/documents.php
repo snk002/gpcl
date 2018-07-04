@@ -16,28 +16,6 @@ include_once("basedoc.php");
 include_once("db.php");
 include_once("session.php");
 
-class TDBDocumentHead extends TDocumentHead
-{
-    public $db;
-
-    public function __construct($parent, $title)
-    {
-        parent::__construct($parent, $title);
-        $this->db = $this->parentcontrol->db;
-    }
-}
-
-class TDBDocumentBody extends TDocumentBody
-{
-    public $db;
-
-    public function __construct($parent)
-    {
-        parent::__construct($parent);
-        $this->db = $this->parentcontrol->db;
-    }
-}
-
 class TDBDocument extends TDocument
 {
     public $db;
@@ -48,10 +26,10 @@ class TDBDocument extends TDocument
         $this->connect();
         parent::__construct($title, $checksrv);
         $this->FreeControl($this->head);
-        $this->head = new TDBDocumentHead($this, $this->title);
+        $this->head = new TDocumentHead($this, $this->title);
         $this->AddControl($this->head);
         $this->FreeControl($this->body);
-        $this->body = new TDBDocumentBody($this);
+        $this->body = new TDocumentBody($this);
         $this->AddControl($this->body);
     }
 
@@ -61,7 +39,38 @@ class TDBDocument extends TDocument
     }
 }
 
-class TDBSDocument extends TDBDocument
+
+interface iSessionDoc {
+    public function IsLogged();
+    public function KillSession($msg = "");
+}
+
+class TSDocument extends TDocument implements iSessionDoc
+{
+
+    public $session;
+
+    public function __construct($title, $checkserv = false, $pvt = false, $redir = "")
+    {
+        $this->session = new TSession($pvt, $redir);
+        parent::__construct($title, $checkserv);
+    }
+
+    public function IsLogged()
+    {
+        return intval($this->session->user) > 0;
+    }
+
+    public function KillSession($msg = "")
+    {
+        $this->session->Disconnect();
+        if ($msg != "") echo "<p>$msg</p>\n";
+        unset($this->session);
+    }
+
+}
+
+class TDBSDocument extends TDBDocument implements iSessionDoc
 {
     public $session;
     protected $isadmin;
