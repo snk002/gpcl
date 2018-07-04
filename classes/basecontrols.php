@@ -100,22 +100,22 @@ class TControl extends TComponent
 
     public function SetStyle($avalue)
     {
-        return $this->attrs->SetAttr("style", $avalue);
+        return $this->SetAttr("style", $avalue);
     }
 
     public function SetClass($avalue)
     {
-        return $this->attrs->SetAttr("class", $avalue);
+        return $this->SetAttr("class", $avalue);
     }
 
     public function SetId($avalue)
     {
-        return $this->attrs->SetAttr("id", $avalue);
+        return $this->SetAttr("id", $avalue);
     }
 
     public function SetOnClick($avalue)
     {
-        return $this->attrs->SetAttr("onclick", $avalue);
+        return $this->SetAttr("onclick", $avalue);
     }
 
     public function HasAttr($aname, $avalue = "")
@@ -136,6 +136,7 @@ class TControl extends TComponent
     {
         if ($ac && !CValues::$autoconv) $text = cc($text);
         $this->content = $text;
+        return $this;
     }
 
     public function GetComplete($offset)

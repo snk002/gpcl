@@ -47,8 +47,8 @@ class TCaptcha extends TIMGH
     public function __construct($fn = '')
     {
         parent::__construct($fn);
-        $this->width = 130;
-        $this->height = 50;
+        $this->width = 140;
+        $this->height = 60;
         $this->symbols = array("1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "Q", "H", "J", "K", "L", "M", "N", "V", "P", "R", "S", "T", "U", "W", "X", "Y", "Z");
         $this->minlength = 5;
         $this->maxlength = 7;
@@ -75,7 +75,7 @@ class TCaptcha extends TIMGH
         if ($this->fontname == "") {
             imagestring($this->bgimg, $this->fontsize, 10, 15, $this->ctext, $this->fontcolor);
         } else {
-            imagettftext($this->bgimg, $this->fontsize, $this->angle, rand(1, 5), rand($this->fontsize * 2, $this->fontsize * 2.5), $this->fontcolor, $this->fontname, $this->ctext);
+            imagettftext($this->bgimg, $this->fontsize, $this->angle, rand(3, 5), rand($this->fontsize * 2, $this->fontsize * 2.5), $this->fontcolor, $this->fontname, $this->ctext);
         }
         $this->img = $this->bgimg;
         if (($this->waves > 0) || ($this->lines > 0)) {

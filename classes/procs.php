@@ -88,6 +88,12 @@ function SafeStr($str, $maxlen = 255, $notags = true)
     return mb_substr($str, 0, $maxlen - 1, CValues::$charset);
 }
 
+function SafeStrSql($str, $maxlen = 255)
+{
+    $str = filter_var($str, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_BACKTICK);
+    return mb_substr($str,0,$maxlen-1, CValues::$charset);
+}
+
 function StripSpaces($str)
 {
     return preg_replace("'\s+'", " ", $str);
@@ -179,6 +185,25 @@ function RStringDay($date = null)
     $mon = date("n",$t);
     $year = date("Y",$t);
     return WeekAsStr($wd, 0) . ", $d " . MonAsStr($mon, 1) . " $year";
+}
+
+function genPass($length = 8, $strength = 1) {
+    switch ($strength) {
+        case 2:
+            $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            break;
+        case 3:
+            $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_!@#$%^&';
+            break;
+        default:
+            $chars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    }
+    $count = mb_strlen($chars);
+    for ($i = 0, $result = ''; $i < $length; $i++) {
+        $index = rand(0, $count - 1);
+        $result .= mb_substr($chars, $index, 1);
+    }
+    return $result;
 }
 
 function MonAsStr($mon, $rcase = 0)

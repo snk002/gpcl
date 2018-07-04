@@ -27,7 +27,7 @@ class TIMGH
     public $blposx;      //left of image/text on bg layer, -1 means center
     public $blposy;      //top of image/text on bg layer, -1 means center
     public $angle;       //angle. For non-ttf fonts only 0 or 90 deg. supported
-    public $fontsize;    //font size, relative (1-5) if system font iss used
+    public $fontsize;    //font size, relative (1-5) if system font is used
     public $fontname;    //ttf file pathname
     public $fontcolor;   //text color, array(R,G,B[,A])
     protected $sizex; //read-only access provided trougth the __get function
