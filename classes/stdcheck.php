@@ -52,14 +52,15 @@ class TCheckLogin extends TDBBase
             }
         } else {
             if (isset($_GET["elogin"]) && isset($_GET["epasswd"])) {
-                $this->login = trim(safestr($_GET["elogin"], $maxlen));
-                $this->passw = trim(safestr($_GET["epasswd"], $maxlen));
+                $this->login = trim(SafeStrSql($_GET["elogin"], $maxlen));
+                $this->passw = trim(SafeStrSql($_GET["epasswd"], $maxlen));
             }
         }
     }
 
     public function SetSession($redirectpage = "", $wait = 1)
     {
+        /** @var $parentdoc TSDocument*/
         $parentdoc = $this->ParentDocument();
         $parentdoc->session->SetUserdata($this->userid, $this->login);
         if ($redirectpage != "") $parentdoc->Redirect($redirectpage, $wait);

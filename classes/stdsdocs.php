@@ -19,9 +19,9 @@ class TStdDBSDocument extends TDBSDocument
     public $bodyer;
     public $footer;
 
-    function __construct($title, $closed = true, $indiv = false)
+    function __construct($title, $closed = true, $indiv = false, $redir = "index.php")
     {
-        parent::__construct($title, false, $closed, $redir = "index.php", $closed);
+        parent::__construct($title, false, $closed, $redir, $closed);
         if ($closed) {
             if (!$this->session->GetIsAdmin()) exit;
         }

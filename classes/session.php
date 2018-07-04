@@ -17,6 +17,10 @@ class TSession extends TObject
     protected $user;        //session user id
     protected $username;    //most used string value
     protected $storedprops; //array
+    public static $ADMIN = 'admin';
+    public static $GROUPID = 'groupid';
+    public static $USERID = 'userid';
+    public static $USERNAME = 'username';
 
     public function __construct($pvt = true, $redir = "", $user = 0, $username = "")
     {
@@ -24,7 +28,7 @@ class TSession extends TObject
         session_start();
         $newsess = false;
         if (sizeof($_SESSION) > 0)
-            $this->user = intval($_SESSION['userid']); else $newsess = true;
+            $this->user = intval($_SESSION[TSession::$USERID]); else $newsess = true;
         if ($newsess) {
             $this->SetUserdata($user, $username);
         }
@@ -41,7 +45,7 @@ class TSession extends TObject
             }
         }
         if (sizeof($_SESSION) > 1) {
-            $this->username = $_SESSION['username'];
+            $this->username = $_SESSION[TSession::$USERNAME];
             $this->LoadStored();
         }
     }
@@ -50,8 +54,8 @@ class TSession extends TObject
     {  // use carefully, it replaces $_SESSION[] id values
         $this->user = $id;
         $this->username = $name;
-        $_SESSION['userid'] = $this->user;
-        $_SESSION['username'] = $this->username;
+        $_SESSION[TSession::$USERID] = $this->user;
+        $_SESSION[TSession::$USERNAME] = $this->username;
     }
 
     public function Redirect($uri, $delay = 0)
@@ -64,7 +68,7 @@ class TSession extends TObject
     protected function LoadStored()
     {
         foreach ($_SESSION as $k => $v) {
-            if (($k != 'userid') && ($k != '') && ($k != 'username')) {
+            if (($k != TSession::$USERID) && ($k != '') && ($k != TSession::$USERNAME)) {
                 $this->AddStoredPair($k, $v);
             }
         }
@@ -89,13 +93,23 @@ class TSession extends TObject
 
     public function SetIsAdmin($haveadmin)
     {
-        if ($haveadmin) $this->AddStoredPair('admin', 200);
-        else $this->AddStoredPair('admin', 0);
+        if ($haveadmin) $this->AddStoredPair(TSession::$ADMIN, 200);
+        else $this->AddStoredPair(TSession::$ADMIN, 0);
     }
 
     public function GetIsAdmin()
     {
-        return (intval($this->GetStoredValue('admin')) == 200);
+        return (intval($this->GetStoredValue(TSession::$ADMIN)) == 200);
+    }
+
+    public function GetGroupId()
+    {
+        return intval($this->GetStoredValue(TSession::$GROUPID));
+    }
+
+    public function SetGroupId($id)
+    {
+        $this->AddStoredPair(TSession::$GROUPID, intval($id));
     }
 
     public function IsActive()
