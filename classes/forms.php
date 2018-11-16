@@ -138,7 +138,7 @@ class TFListControl extends TFormControl
         if ($val) $this->itemtag = $val; //use carefully!
     }
 
-    public function AddItems($vals, $texts = array(), $selval = null)
+    public function AddItems($vals, $texts = array())
     {
         $i = 0;
         foreach ($vals as $val) {
@@ -148,7 +148,7 @@ class TFListControl extends TFormControl
         }
     }
 
-    public function AddItem($val, $txt = "", $issel = false)
+    public function AddItem($val, $txt = "")
     {
         $ctrl = $this->CreateChildControl($this->itemtag);
         $ctrl->attrs->SetAttr('value', $val);
@@ -416,6 +416,12 @@ abstract class TCustomForm extends TBlockControl
         return $ctrl;
     }
 
+    public function AddLabeledCheckBox($name, $checked = false, $text = "") {
+        $cb = $this->AddCheckBox($name, $checked, "");
+        if ($text != "") $this->AddLabel($name,$text);
+        return $cb;
+    }
+
     public function AddRadioButton($name, $value = "", $checked = false)
     {
         $ctrl = $this->AddCustomInput($name, 'radio');
@@ -621,7 +627,7 @@ class TFormData extends TObject
         }
         if (substr($dt, 0, 3) == "str") {
             $len = intval(substr($dt, 3, 10));
-            if ($len > 0) return substr(trim($value), 0, $len);
+            if ($len > 0) return mb_substr(trim($value), 0, $len);
             else return trim($value);
         }
         return NULL;
@@ -691,6 +697,7 @@ class TForm extends TCustomForm
         parent::__construct($parent);
         $this->name = $name;
         $this->script = $script;
+        /** @$this->values TFormData */
         $this->values = NULL;
         $this->tag = 'form';
         $this->SetType($type);

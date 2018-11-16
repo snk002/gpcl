@@ -225,6 +225,7 @@ text from $endcontent placed between last child close tag and this element close
     public function __construct($parent, $tag = "")
     {
         parent::__construct($parent, $tag);
+        /** @$this->controls TControl[] */
         $this->controls = array();
         $this->endcontent = "";
     }
