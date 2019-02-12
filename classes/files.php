@@ -40,14 +40,39 @@ class TUploadH extends TControl
         return substr(strrchr($filename, '.'), 1);
     }
 
-    public function Upload($filename = "", $i=0)
-    {
-        if ($this->multi) {
+    public function CheckForImage($deep = false, $i = -1) {
+        if ($i>=0) {
+            $ftype = $_FILES[$this->name]['type'][$i];
             $fname = $_FILES[$this->name]['name'][$i];
             $tname = $_FILES[$this->name]['tmp_name'][$i];
         } else {
+            $ftype = $_FILES[$this->name]['type'];
             $fname = $_FILES[$this->name]['name'];
             $tname = $_FILES[$this->name]['tmp_name'];
+        }
+        if (($ftype != "image/gif") && ($ftype != "image/jpeg") && ($ftype != "image/png")) {
+            if (!$this->silent) echo $ftype . ": CHECK MIMETYPE FAILS<br />";
+            return false;
+        }
+        if ($deep) {
+            $imageinfo = getimagesize($tname);
+            if ($imageinfo['mime'] != 'image/gif' && $imageinfo['mime'] != 'image/jpeg' && $imageinfo['mime'] != 'image/png') {
+                if (!$this->silent) echo $fname . ": CHECK IMAGESIZE FAILS<br />";
+                return false;
+            }
+            $this->imagetype = $imageinfo['mime'];
+        }
+        return true;
+    }
+
+    public function Upload($filename = "", $i=-1)
+    {
+        if (($this->multi) && ($i>=0)) {
+            $fname = $_FILES[$this->name]['name'][$i];
+            $tname = $_FILES[$this->name]['tmp_name'][$i];
+        } else {
+            $fname = $_FILES[$this->name]['name'][0];
+            $tname = $_FILES[$this->name]['tmp_name'][0];
         }
         foreach ($this->blacklist as $item) {
             if (preg_match("/$item\$/i", $fname)) {
@@ -56,21 +81,7 @@ class TUploadH extends TControl
             }
         }
         if ($this->checkimage) {
-            if ($this->multi) {
-                $ftype = $_FILES[$this->name]['type'][$i];
-            } else {
-                $ftype = $_FILES[$this->name]['type'];
-            }
-            if (($ftype != "image/gif") && ($ftype != "image/jpeg") && ($ftype != "image/png")) {
-                if (!$this->silent) echo $ftype . ": CHECK MIMETYPE FAILS<br />";
-                return false;
-            }
-            $imageinfo = getimagesize($tname);
-            if ($imageinfo['mime'] != 'image/gif' && $imageinfo['mime'] != 'image/jpeg' && $imageinfo['mime'] != 'image/png') {
-                if (!$this->silent) echo $fname . ": CHECK IMAGESIZE FAILS<br />";
-                return false;
-            }
-            $this->imagetype = $imageinfo['mime'];
+            if (!$this->CheckForImage(true,$i)) return false;
         }
         if ($filename == "") $this->filename = basename($fname);
         else $this->filename = $filename;

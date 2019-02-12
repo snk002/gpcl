@@ -507,31 +507,23 @@ class TDBForm extends TForm
     {
         $this->values = new TDBFormData($this, NULL, $types, $tablename);
         return $this->values;
-//echo " in MakeAutoData values->idfld: ".$this->values->idfld."<br />";
     }
 
     public function AutoProcess($okctrl, $resctrl = NULL)
     {
         $resdata = $this->GetSubmitted($resctrl);
         if (isset($resdata) && ($resdata != "")) {
-//echo "AutoProcess ResetData<br />";
             $this->values->ResetData();
             return;
         }
         $okdata = $this->GetSubmitted($okctrl);
-//echo "okdata = $okdata / okctrl = $okctrl <br>";
         if (isset($okdata) && ($okdata != "")) {
-//echo "Ready to SaveToDB!<br>";
             $this->values->SaveToDB($this->GetSubmitted($this->values->idfld));
             if (!$this->values->LoadFromDB()) {
                 $this->values->ResetData();
             }
         } else {
             $idval = $this->GetSubmitted($this->values->idfld);
-//echo "AutoProcess values->idfld:".$this->values->idfld." idval = $idval<br />";
-//echo "<pre>";
-//print_r($this->values);
-//echo "</pre>";
             if (isset($idval)) {
                 if (!$this->values->LoadFromDB()) {
                     $this->values->ResetData();
@@ -570,7 +562,6 @@ class TDBFormData extends TFormData
     {
         /*** By default key field is first key=>value from the types array ***/
         if ($idfld != "") $this->idfld = $idfld;
-//echo "in SetID this->idval: {$this->GetIdValue()} / this->idfld: $this->idfld<br />";
     }
 
     public function SetDataTypes($types, $soft = false)
@@ -588,13 +579,11 @@ class TDBFormData extends TFormData
     {
         if (isset($id)) $this->SetIdValue($id);
         $sql = " select * from $this->tablename where $this->idfld = " . $this->GetIdValue();
-//echo "LoadFromDB: $sql<br />";
         if (!$this->db->Query($sql)) return false;
         $dbu = $this->db->FetchObject();
         if (!$dbu) {
-            //echo "<b>DBU FAIL</b><br />";
             return false;
-        } else ;//echo "<b>DBU OK</b><br />";
+        } else ;
         $this->AssignFrom($dbu);
         return true;
     }
@@ -602,15 +591,12 @@ class TDBFormData extends TFormData
     public function SetIdValue($value)
     {
         if (isset($this->idfld)) $this->adata[$this->idfld] = $value;
-//echo "SetIdValue = $value / this->adata[$this->idfld] = ".$this->adata[$this->idfld]."<br>";
     }
 
     public function GetIdValue()
     {
         if (isset($this->adata[$this->idfld])) return $this->adata[$this->idfld];
         else {
-            //echo "TDBFormData.GetIdValue <b>fail</b>!<br>$this->idfld<pre>";
-            //print_r($this->adata);
             return NULL;
         }
     }
@@ -623,7 +609,6 @@ class TDBFormData extends TFormData
             if (isset($id)) $this->idval = $id;
             $this->UpdateInDB(" where $this->idfld = " . $this->GetIdValue());
         }
-//echo "SaveToDB idfld/idval: $this->idfld = {$this->GetIdValue()}<br />";
     }
 
     public function InsertToDB()
@@ -639,6 +624,16 @@ class TDBFormData extends TFormData
                 $cq = "'";
             } else if ($this->types[$key] == "bcb") {
                 $value = intval($value); //"" to 0, "on" to 1
+            } else if ($this->types[$key] == "datetime") {
+                $value = str_replace("T"," ",$value);
+                $oq = "'";
+                $cq = "'";
+            } else if ($this->types[$key] == "date") {
+                $oq = "'";
+                $cq = "'";
+            } else if ($this->types[$key] == "time") {
+                $oq = "'";
+                $cq = "'";
             }
             if ($flds != "") $flds .= ", ";
             $flds .= "$key";
@@ -646,12 +641,9 @@ class TDBFormData extends TFormData
             $vals .= "$oq{$value}$cq";
         }
         $sql = "insert into $this->tablename ($flds) values ($vals) ";
-//echo "<b>INS:</b>".$sql."<br />".intval(isset($this->db))."<br />";
         if ($this->db->Query($sql)) {
-//echo "Query ok.<br />";
             return $this->db->Lastval();
         } else {
-//echo "Query fail ".$this->db->GetError()."<br />";
             return NULL;
         }
     }
@@ -669,6 +661,16 @@ class TDBFormData extends TFormData
                 $value = str_replace("'", "\'", $value);
             } else if ($this->types[$key] == "bcb") {
                 $value = intval($value); //"" to 0, "on" to 1
+            } else if ($this->types[$key] == "datetime") {
+                $value = str_replace("T"," ",$value);
+                $oq = "'";
+                $cq = "'";
+            } else if ($this->types[$key] == "date") {
+                $oq = "'";
+                $cq = "'";
+            } else if ($this->types[$key] == "time") {
+                $oq = "'";
+                $cq = "'";
             }
             if ($s != "") $s .= ", ";
             $s .= "$key = $oq{$value}$cq";

@@ -187,6 +187,15 @@ function RStringDay($date = null)
     return WeekAsStr($wd, 0) . ", $d " . MonAsStr($mon, 1) . " $year";
 }
 
+function delTree($dir) {
+    if (!is_dir($dir)) return true;
+    $files = array_diff(scandir($dir), array('.','..'));
+    foreach ($files as $file) {
+        (is_dir("$dir/$file")) ? delTree("$dir/$file") : unlink("$dir/$file");
+    }
+    return rmdir($dir);
+}
+
 function genPass($length = 8, $strength = 1) {
     switch ($strength) {
         case 2:

@@ -50,7 +50,7 @@ class TFormControl extends TOnwedControl
         $attrs .= $this->attrs->GetAllAttrs();
         if ((!$this->hasclose) && (CConst::isxhtml())) $attrs .= " /";
         $nameattr = "";
-        if ($this->tag != "div") {  //case for TRadioGroup, etc.
+        if (($this->tag != "div") && ($this->tag != "optgroup")) {  //case for TRadioGroup, etc.
             $nameattr = " name=\"{$this->name}\"";
         }
         return "<$this->tag{$nameattr}{$attrs}>";
@@ -155,6 +155,10 @@ class TFListControl extends TFormControl
         if ($txt == "") $txt = $val;
         $ctrl->content = $txt;
         return $ctrl;
+    }
+
+    public function GetItem($i) {
+        return $this->controls[$i];
     }
 
     public function GetComplete($offset='')
@@ -317,7 +321,6 @@ abstract class TCustomForm extends TBlockControl
     {
         $ctrl = $this->AddCustomInput($name, 'password');
         $ctrl->SetSize($size);
-        //if ($value!="") $ctrl->SetAttr("value",$value);
         $this->SetDefVal($ctrl, $name, $value);
         return $ctrl;
     }
@@ -331,6 +334,9 @@ abstract class TCustomForm extends TBlockControl
         return $ctrl;
     }
 
+    /**
+     * @param $ctrl TControl
+     */
     protected function SetDefVal($ctrl, $name, $value)
     {
         if (!is_null($value)) $ctrl->SetAttr("value", $value);
@@ -340,7 +346,6 @@ abstract class TCustomForm extends TBlockControl
     public function AddHidden($name, $value)
     {
         $ctrl = $this->AddCustomInput($name, 'hidden');
-        //$ctrl->SetAttr("value",$value);
         $this->SetDefVal($ctrl, $name, $value);
         return $ctrl;
     }
@@ -391,6 +396,27 @@ abstract class TCustomForm extends TBlockControl
     {
         $ctrl = $this->AddCustomInput($name, 'text');
         $ctrl->SetSize($size);
+        $this->SetDefVal($ctrl, $name, $value);
+        return $ctrl;
+    }
+
+    public function AddDate($name, $value = "")
+    {
+        $ctrl = $this->AddCustomInput($name, 'date');
+        $this->SetDefVal($ctrl, $name, $value);
+        return $ctrl;
+    }
+
+    public function AddTime($name, $value = "")
+    {
+        $ctrl = $this->AddCustomInput($name, 'time');
+        $this->SetDefVal($ctrl, $name, $value);
+        return $ctrl;
+    }
+
+    public function AddDateTime($name, $value = "")
+    {
+        $ctrl = $this->AddCustomInput($name, 'datetime-local');
         $this->SetDefVal($ctrl, $name, $value);
         return $ctrl;
     }
@@ -492,7 +518,6 @@ abstract class TCustomForm extends TBlockControl
 
     public function GetSubmitted($ctrlname)
     {
-//echo "this->method = $this->method";
         if ($this->method == "get") {
             if (isset($_GET[$ctrlname])) return $_GET[$ctrlname];
             else return NULL;
@@ -619,6 +644,15 @@ class TFormData extends TObject
         if ($dt == "bcb") {
             return ($value == "on");
         }
+        if ($dt == "date") {
+            return filter_var($value, FILTER_SANITIZE_STRING);
+        }
+        if ($dt == "time") {
+            return filter_var($value, FILTER_SANITIZE_STRING);
+        }
+        if ($dt == "datetime") {
+            return filter_var($value, FILTER_SANITIZE_STRING);
+        }
         if ($dt == "url") {
             return filter_var($value, FILTER_SANITIZE_URL);
         }
@@ -635,7 +669,6 @@ class TFormData extends TObject
 
     public function ResetData()
     {
-//echo "Reset data<br />";
         foreach ($this->adata as $k => $v) $this->adata[$k] = NULL; //unset($this->adata[$k]);
         $this->adata = array();
     }
@@ -643,7 +676,19 @@ class TFormData extends TObject
     public function AssignFrom($obj)
     {
         foreach ($obj as $key => $value) {
-            $this->adata[$key] = $obj->$key;
+            $val = $obj->$key;
+            if (isset($this->types[$key])) {
+                //fixing for case of full datetime stored in DB
+                $type = $this->types[$key];
+                if ($type=="date") {
+                    $x=strpos(trim($value),' ');
+                    if ($x>9) $val = mb_substr($value,0,$x);
+                } elseif ($type=="time") {
+                    $x=strpos(trim($value),' ');
+                    if ($x>9) $val = mb_substr($value,$x,8);
+                }
+            }
+            $this->adata[$key] = $val;
         }
     }
 

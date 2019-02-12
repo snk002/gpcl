@@ -232,7 +232,6 @@ class TIMGH
                 imagepng($new, $this->newname, $qty);
                 break;
         }
-        // imagedestroy($this->img);
         imagedestroy($new);
         return true;
     }
